@@ -15,11 +15,27 @@ resposta_final = {}
 #Titulo
 resposta_final['title'] = parsed_html.find('title').get_text()
 
-#Categories
-divCat = parsed_html.find('div', attrs={'class': 'proddet'})
-resposta_final['categories'] = divCat.find("h5")
+#Marca do produto
+resposta_final['brand'] = parsed_html.find('div', attrs={'class': 'brand'}).get_text()
 
-json_resposta_final = json.dumps(resposta_final)
+#Descrition
+divDes = parsed_html.find('div', attrs={'class': 'proddet'})
+descricao = divDes.find_all('p')
+for desc in descricao:
+    resposta_final['description'] = desc.get_text()
 
-with open('produto.json', 'w') as arquivo_json:
+#Properties
+propi = []
+table = parsed_html.find('table', attrs={'class': 'pure-table'})
+propiedades = table.find_all('tr')
+for propriedade in propiedades:
+    label = propriedade.find('b').get_text(strip=True)
+    value = propriedade.find('td').get_text(strip=True)
+    propi.append({'value': value})
+
+resposta_final['proprietes'] = propi
+
+json_resposta_final = json.dumps(resposta_final, indent=4, ensure_ascii=False)
+
+with open('produto.json', 'w', encoding='utf-8') as arquivo_json:
     arquivo_json.write(json_resposta_final)
