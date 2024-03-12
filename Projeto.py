@@ -1,5 +1,6 @@
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
+import re
 import json
 # import requests
 
@@ -26,13 +27,24 @@ for desc in descricao:
 
 #Properties
 propi = []
+padrao = re.compile(r'<td>(.*?)</td>')
 table = parsed_html.find('table', attrs={'class': 'pure-table'})
 propiedades = table.find_all('tr')
 for propriedade in propiedades:
     label = propriedade.find('b').get_text(strip=True)
-    value = propriedade.find('td').get_text(strip=True)
-    propi.append({'value': value})
 
+
+
+    # value = propriedade.find('td').get_text(strip=True)
+    resultado = re.findall(padrao, propriedade.find('td').get_text())
+    
+
+
+    propi.append({'label': label})
+    # propi.append({'value': value})
+
+
+print(type(value))
 resposta_final['proprietes'] = propi
 
 json_resposta_final = json.dumps(resposta_final, indent=4, ensure_ascii=False)
