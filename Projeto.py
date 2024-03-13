@@ -1,6 +1,5 @@
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
-import re
 import json
 # import requests
 
@@ -19,6 +18,14 @@ resposta_final['title'] = parsed_html.find('title').get_text()
 #Marca do produto
 resposta_final['brand'] = parsed_html.find('div', attrs={'class': 'brand'}).get_text()
 
+#Categories
+Array = []
+navCat = parsed_html.find('nav', attrs={'class': 'current-category'})
+categorias = navCat.find_all('a')
+for categoria in categorias:
+    Array.append(categoria.get_text())
+resposta_final['categories'] = Array
+    
 #Descrition
 divDes = parsed_html.find('div', attrs={'class': 'proddet'})
 descricao = divDes.find_all('p')
@@ -34,6 +41,11 @@ for propriedade in propiedades:
     td_tag = propriedade.find_all('td')[1].get_text()
     propi.append({'label': label, 'value': td_tag})
 resposta_final['proprietes'] = propi
+
+#URL
+link = parsed_html.find('a')
+resposta_final['url'] = link.get('href')
+# print(link.get('href'))
 
 json_resposta_final = json.dumps(resposta_final, indent=4, ensure_ascii=False)
 
