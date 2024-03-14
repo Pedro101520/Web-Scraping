@@ -38,5 +38,25 @@
             "value": "1 year"
         }
     ],
+    "reviews": [
+        {
+            "nome": "Louisa Eliel",
+            "date": "28/07/2021",
+            "score": 4,
+            "text": "Very good rubber ducks, however I think they are a bit too big for me."
+        },
+        {
+            "nome": "Kairo Josué",
+            "date": "12/05/2021",
+            "score": 1,
+            "text": "Péssima qualidade. Já não fazem patos de borracha como antigamente."
+        },
+        {
+            "nome": "Victor Huey",
+            "date": "03/04/2021",
+            "score": 5,
+            "text": "Very good"
+        }
+    ],
     "url": "https://infosimples.github.io/ecommerce-example/"
 }

@@ -42,6 +42,26 @@ for propriedade in propiedades:
     propi.append({'label': label, 'value': td_tag})
 resposta_final['proprietes'] = propi
 
+#Reviews
+reviews = []
+avaliacoes = parsed_html.find_all('div', attrs={'class': 'analisebox'})
+for avaliacao in avaliacoes:
+    review = {}
+    review['nome'] = avaliacao.find('span', attrs={'class': 'analiseusername'}).get_text()
+    review['date'] = avaliacao.find('span', attrs={'class': 'analisedate'}).get_text()
+
+    estrelas = avaliacao.find('span', attrs={'class': 'analisestars'}).get_text()
+    Avestrela = 0
+    for i in estrelas:
+        if(i == '★'):
+            Avestrela += 1
+    review['score'] = Avestrela
+
+    review['text'] = avaliacao.find('p').get_text()
+
+    reviews.append(review)
+resposta_final['reviews'] = reviews
+
 #URL
 link = parsed_html.find('a')
 resposta_final['url'] = link.get('href')
