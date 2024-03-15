@@ -7,29 +7,25 @@ parsed_html = BeautifulSoup(url, "html.parser")
 resposta_final = {}
 
 def Titulo(): resposta_final['title'] = parsed_html.find('title').get_text()
-
 def Marca(): resposta_final['brand'] = parsed_html.find('div', attrs={'class': 'brand'}).get_text()
 
 def Categorias():
     Array = []
     navCat = parsed_html.find('nav', attrs={'class': 'current-category'})
     categorias = navCat.find_all('a')
-    for categoria in categorias:
-        Array.append(categoria.get_text())
+    for categoria in categorias: Array.append(categoria.get_text())
     resposta_final['categories'] = Array
 
 def Descricao():
     divDes = parsed_html.find('div', attrs={'class': 'proddet'})
     descricao = divDes.find_all('p')
-    for desc in descricao:
-        resposta_final['description'] = desc.get_text()
+    for desc in descricao: resposta_final['description'] = desc.get_text()
 
 def Skus():
     Caracteristicas = []
     produtos = parsed_html.find_all('div', attrs={'class': 'card-container'})
     for produto in produtos:
         Caracteristica = {}
-
         Caracteristica['name'] = produto.find('div', attrs={'class': 'prod-nome'}).get_text()
         preco = produto.find('div', attrs={'class': 'prod-pnow'})
         precoAntigo = produto.find('div', attrs={'class': 'prod-pold'}) 
@@ -66,22 +62,10 @@ def Propriedades():
         propi.append({'label': label, 'value': td_tag})
     resposta_final['proprietes'] = propi
 
-def URL():
-    link = parsed_html.find('a')
-    resposta_final['url'] = link.get('href')
-
-def estrela(estrelas):
-    Avestrela = 0
-    for i in estrelas:
-        if(i == '★'):
-            Avestrela += 1
-    # review['score'] = Avestrela
-    return Avestrela
-
 def Reviews():
-    #Reviews
     reviews = []
     media = 0.0
+    totalAvaliacoes = 0
     avaliacoes = parsed_html.find_all('div', attrs={'class': 'analisebox'})
     for avaliacao in avaliacoes:
         review = {}
@@ -89,16 +73,24 @@ def Reviews():
         review['date'] = avaliacao.find('span', attrs={'class': 'analisedate'}).get_text()
         estrelas = avaliacao.find('span', attrs={'class': 'analisestars'}).get_text()
 
-        soma = estrela(estrelas)
-        # review['score'] = soma
-        # media += soma
-        # print(media)
-
-        # media += estrela(estrelas)
-
+        Avestrela = 0
+        for i in estrelas:
+            if(i == '★'):
+                Avestrela += 1
+        totalAvaliacoes += 1
+        media += Avestrela
+        review['score'] = Avestrela
         review['text'] = avaliacao.find('p').get_text()
         reviews.append(review)
     resposta_final['reviews'] = reviews
+    Media(media, totalAvaliacoes)
+
+def Media(media, totalAv):
+    resposta_final['reviews_average_score'] = format(media / totalAv, '.2f')
+
+def URL():
+    link = parsed_html.find('a')
+    resposta_final['url'] = link.get('href')
 
 Titulo()
 Marca()
@@ -109,12 +101,6 @@ Propriedades()
 Reviews()
 URL()
 
-
-
-
-#Nota média
-
 json_resposta_final = json.dumps(resposta_final, indent=4, ensure_ascii=False)
-
 with open('produto.json', 'w', encoding='utf-8') as arquivo_json:
     arquivo_json.write(json_resposta_final)
