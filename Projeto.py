@@ -6,14 +6,6 @@ url = urlopen("https://infosimples.com/vagas/desafio/commercia/product.html")
 parsed_html = BeautifulSoup(url, "html.parser")
 resposta_final = {}
 
-def estrelas():
-    Avestrela = 0
-    estrela = parsed_html.find('span', attrs={'class': 'analisestars'}).get_text()
-    for i in estrela:
-        if(i == '★'):
-            Avestrela += 1
-    return Avestrela
-
 def Titulo(): resposta_final['title'] = parsed_html.find('title').get_text()
 
 def Marca(): resposta_final['brand'] = parsed_html.find('div', attrs={'class': 'brand'}).get_text()
@@ -78,8 +70,35 @@ def URL():
     link = parsed_html.find('a')
     resposta_final['url'] = link.get('href')
 
-def Media():
-    print(estrelas())
+def estrela(estrelas):
+    Avestrela = 0
+    for i in estrelas:
+        if(i == '★'):
+            Avestrela += 1
+    # review['score'] = Avestrela
+    return Avestrela
+
+def Reviews():
+    #Reviews
+    reviews = []
+    media = 0.0
+    avaliacoes = parsed_html.find_all('div', attrs={'class': 'analisebox'})
+    for avaliacao in avaliacoes:
+        review = {}
+        review['nome'] = avaliacao.find('span', attrs={'class': 'analiseusername'}).get_text()
+        review['date'] = avaliacao.find('span', attrs={'class': 'analisedate'}).get_text()
+        estrelas = avaliacao.find('span', attrs={'class': 'analisestars'}).get_text()
+
+        soma = estrela(estrelas)
+        # review['score'] = soma
+        # media += soma
+        # print(media)
+
+        # media += estrela(estrelas)
+
+        review['text'] = avaliacao.find('p').get_text()
+        reviews.append(review)
+    resposta_final['reviews'] = reviews
 
 Titulo()
 Marca()
@@ -87,31 +106,13 @@ Categorias()
 Descricao()
 Skus()
 Propriedades()
-Media()
+Reviews()
 URL()
 
-#Reviews
-reviews = []
-media = 0.0
-avaliacoes = parsed_html.find_all('div', attrs={'class': 'analisebox'})
-for avaliacao in avaliacoes:
-    review = {}
-    review['nome'] = avaliacao.find('span', attrs={'class': 'analiseusername'}).get_text()
-    review['date'] = avaliacao.find('span', attrs={'class': 'analisedate'}).get_text()
 
-    
-    # media += Avestrela
 
-    # review['score'] = Avestrela
-
-    review['score'] = estrelas()
-    review['text'] = avaliacao.find('p').get_text()
-
-    reviews.append(review)
-resposta_final['reviews'] = reviews
 
 #Nota média
-resposta_final['reviews_average_score'] = media
 
 json_resposta_final = json.dumps(resposta_final, indent=4, ensure_ascii=False)
 

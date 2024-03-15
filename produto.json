@@ -58,7 +58,6 @@
             "value": "1 year"
         }
     ],
-    "url": "https://infosimples.github.io/ecommerce-example/",
     "reviews": [
         {
             "nome": "Louisa Eliel",
@@ -69,15 +68,15 @@
         {
             "nome": "Kairo Josué",
             "date": "12/05/2021",
-            "score": 4,
+            "score": 1,
             "text": "Péssima qualidade. Já não fazem patos de borracha como antigamente."
         },
         {
             "nome": "Victor Huey",
             "date": "03/04/2021",
-            "score": 4,
+            "score": 5,
             "text": "Very good"
         }
     ],
-    "reviews_average_score": 0.0
+    "url": "https://infosimples.github.io/ecommerce-example/"
 }
