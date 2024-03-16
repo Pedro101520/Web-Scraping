@@ -1,7 +1,12 @@
 {
-    "title": "Rubber Duck MK Ultra | Commercia",
+    "title": "Rubber Duck MK Ultra",
     "brand": "Duck Makers Inc.",
-    "categories": "Rubber Ducks",
+    "categories": [
+        "Commercia",
+        "Health & Care",
+        "Bath",
+        "Rubber Ducks"
+    ],
     "description": " Cada Patinho de Borracha Quântico vem equipado com um sistema de comunicação interdimensional, permitindo que eles conversem não apenas entre si, mas também com outros objetos inanimados no banheiro - prepare-se para diálogos improváveis entre seu pato de borracha e o sabonete! Além disso, esses patos têm uma habilidade secreta de transformação: basta apertar sua barriguinha e assistir enquanto se transformam em mini submarinos de borracha, prontos para explorar os confins da banheira em busca de aventuras subaquáticas surreais. Com os Patos de Borracha Quânticos, o limite da diversão é apenas sua imaginação (e talvez a sanidade do Dr. Quacksalot)! ",
     "Skus": [
         {

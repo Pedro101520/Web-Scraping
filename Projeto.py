@@ -6,7 +6,7 @@ url = urlopen("https://infosimples.com/vagas/desafio/commercia/product.html")
 parsed_html = BeautifulSoup(url, "html.parser")
 resposta_final = {}
 
-def Titulo(): resposta_final['title'] = parsed_html.find('title').get_text()
+def Titulo(): resposta_final['title'] = parsed_html.find('h2', attrs={'id': 'product_title'}).get_text()
 def Marca(): resposta_final['brand'] = parsed_html.find('div', attrs={'class': 'brand'}).get_text()
 
 def Categorias():
