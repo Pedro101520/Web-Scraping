@@ -10,47 +10,46 @@ def Titulo(): resposta_final['title'] = parsed_html.find('title').get_text()
 def Marca(): resposta_final['brand'] = parsed_html.find('div', attrs={'class': 'brand'}).get_text()
 
 def Categorias():
-    Array = []
-    navCat = parsed_html.find('nav', attrs={'class': 'current-category'})
-    categorias = navCat.find_all('a')
-    for categoria in categorias: Array.append(categoria.get_text())
-    resposta_final['categories'] = Array
+    categoriaFinal = []
+    tagCategoria = parsed_html.find('nav', attrs={'class': 'current-category'})
+    categorias = tagCategoria.find_all('a')
+    for categoria in categorias: categoriaFinal.append(categoria.get_text())
+    resposta_final['categories'] = categoriaFinal
 
 def Descricao():
-    divDes = parsed_html.find('div', attrs={'class': 'proddet'})
-    descricao = divDes.find_all('p')
+    tagDescricao = parsed_html.find('div', attrs={'class': 'proddet'})
+    descricao = tagDescricao.find_all('p')
     for desc in descricao: resposta_final['description'] = desc.get_text()
 
 def Skus():
-    Caracteristicas = []
+    caractFinal = []
     produtos = parsed_html.find_all('div', attrs={'class': 'card-container'})
     for produto in produtos:
-        Caracteristica = {}
-        Caracteristica['name'] = produto.find('div', attrs={'class': 'prod-nome'}).get_text()
+        caract = {}
+        caract['name'] = produto.find('div', attrs={'class': 'prod-nome'}).get_text()
         preco = produto.find('div', attrs={'class': 'prod-pnow'})
-        precoAntigo = produto.find('div', attrs={'class': 'prod-pold'}) 
-        temProduto = produto.find('i')
+        precoAntigo = produto.find('div', attrs={'class': 'prod-pold'})
 
+        produtoDisponivel = produto.find('i')
         #Verifica se tem preco
         if preco is None:
-            Caracteristica['current-price'] = None
+            caract['current-price'] = None
         else:
-            Caracteristica['current-price'] = preco.get_text()
-
+            caract['current-price'] = preco.get_text()
         #Verifica o nome antigo
         if precoAntigo is None:
-            Caracteristica['old-price'] = None
+            caract['old-price'] = None
         else:
-            Caracteristica['old-price'] = precoAntigo.get_text()
+            caract['old-price'] = precoAntigo.get_text()
 
         #Verifica sem tem no estoque
-        if(temProduto):
-            Caracteristica['availabe'] = False
+        if(produtoDisponivel):
+            caract['availabe'] = False
         else:
-            Caracteristica['availabe'] = True
-        
-        Caracteristicas.append(Caracteristica)
-    resposta_final['Skus'] = Caracteristicas
+            caract['availabe'] = True
+
+        caractFinal.append(caract)
+    resposta_final['Skus'] = caractFinal
 
 def Propriedades():
     propi = []
@@ -71,16 +70,20 @@ def Reviews():
         review = {}
         review['nome'] = avaliacao.find('span', attrs={'class': 'analiseusername'}).get_text()
         review['date'] = avaliacao.find('span', attrs={'class': 'analisedate'}).get_text()
-        estrelas = avaliacao.find('span', attrs={'class': 'analisestars'}).get_text()
+        review['text'] = avaliacao.find('p').get_text()
 
+        #Parte responsável por acessar o número de estrelas das avaliações
+        estrelas = avaliacao.find('span', attrs={'class': 'analisestars'}).get_text()
         Avestrela = 0
         for i in estrelas:
             if(i == '★'):
                 Avestrela += 1
+
+        #Parte responsável por fornecer informações para o cáculo da média
         totalAvaliacoes += 1
         media += Avestrela
+
         review['score'] = Avestrela
-        review['text'] = avaliacao.find('p').get_text()
         reviews.append(review)
     resposta_final['reviews'] = reviews
     Media(media, totalAvaliacoes)
